@@ -25,8 +25,16 @@ def get_cuboid(cuboid_id):
                    "error": f"Cuboid with id #{cuboid_id} does not exist."
         }, HTTPStatus.NOT_FOUND
 
-    cuboid_schema = CuboidSchema()
-    return jsonify(cuboid_schema.dump(cuboid)), HTTPStatus.OK
+    volume = cuboid.depth * cuboid.width * cuboid.height
+
+    response = {
+        "depth": cuboid.depth,
+        "height": cuboid.height,
+        "id": cuboid.id,
+        "width": cuboid.width,
+        "volume": volume
+    }
+    return response, HTTPStatus.OK
 
 
 @cuboid_api.route("/", methods=["POST"])
