@@ -8,4 +8,5 @@ class Cuboid(db.Model):
     width = db.Column(db.Integer)
     height = db.Column(db.Integer)
     depth = db.Column(db.Integer)
+    volume = db.Column(db.Integer)
     bag_id = db.Column(db.Integer, db.ForeignKey("bags.id"), nullable=False)

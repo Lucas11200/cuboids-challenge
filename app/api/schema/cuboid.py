@@ -11,4 +11,5 @@ class CuboidSchema(ma.SQLAlchemySchema):
     width = ma.auto_field()
     height = ma.auto_field()
     depth = ma.auto_field()
+    volume = ma.auto_field()
     bag = ma.Nested("BagSchema", exclude=("cuboids",))
