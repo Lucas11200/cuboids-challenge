@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
+from app.api.model.bag import Bag
 from app.api.model.cuboid import Cuboid
 from app.api.schema.cuboid import CuboidSchema
 from app.api.db import db
@@ -40,13 +41,24 @@ def get_cuboid(cuboid_id):
 @cuboid_api.route("/", methods=["POST"])
 def create_cuboid():
     content = request.json
+    width = content.get("width")
+    height = content.get("height")
+    depth = content.get("depth")
+    bag_id = content.get("bag_id")
+
+    bag = Bag.query.get(bag_id)
+    if not bag:
+        return {
+                   "error": f"Bag with id #{bag_id} does not exist."
+        }, HTTPStatus.NOT_FOUND
+
 
     cuboid_schema = CuboidSchema()
     cuboid = Cuboid(
-        width=content["width"],
-        height=content["height"],
-        depth=content["depth"],
-        bag_id=content["bag_id"],
+        width=width,
+        height=height,
+        depth=depth,
+        bag_id=bag_id,
     )
     db.session.add(cuboid)
     db.session.commit()
