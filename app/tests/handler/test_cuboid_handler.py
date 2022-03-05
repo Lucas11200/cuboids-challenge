@@ -163,7 +163,7 @@ class TestCuboidUpdate:
         return [bag, cuboid]
 
     @staticmethod
-    def test_should_update_cuboid(session):
+    def test_should_update_cuboid(test_client, session):
         # pylint: disable=unused-variable
         bag, cuboid = TestCuboidUpdate._before_each(session)
 
@@ -173,7 +173,13 @@ class TestCuboidUpdate:
         new_height = 5
         new_depth = 5
 
-        response = []
+        response = test_client.put(
+            f"/cuboids/{cuboid.id}",
+            data=json.dumps({
+                "width": new_width, "height": new_height, "depth": new_depth
+            }),
+            content_type="application/json",
+        )
 
         assert response.status_code == HTTPStatus.OK
 
@@ -193,8 +199,16 @@ class TestCuboidUpdate:
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     @staticmethod
-    def test_should_return_not_found_if_cuboid_doesnt_exists():
-        response = []
+    def test_should_return_not_found_if_cuboid_doesnt_exists(test_client):
+        unexciting_cuboid_id = 666
+
+        response = test_client.put(
+            f"/cuboids/{unexciting_cuboid_id}",
+            data=json.dumps({
+                "width": 123, "height": 123, "depth": 123
+            }),
+            content_type="application/json",
+        )
         assert response.status_code == HTTPStatus.NOT_FOUND
 
 
