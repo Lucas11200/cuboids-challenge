@@ -226,11 +226,22 @@ class TestCuboidDelete:
         return cuboid
 
     @staticmethod
-    def test_should_delete_the_cuboid():
-        response = []
+    def test_should_delete_the_cuboid(test_client, session):
+        # pylint: disable=unused-variable
+        bag, cuboid = TestCuboidUpdate._before_each(session)
+
+        response = test_client.delete(
+            f"/cuboids/{cuboid.id}",
+            content_type="application/json",
+        )
         assert response.status_code == HTTPStatus.OK
 
     @staticmethod
-    def test_should_return_not_found_if_cuboid_doesnt_exists():
-        response = []
+    def test_should_return_not_found_if_cuboid_doesnt_exists(test_client, session):
+        unexciting_cuboid_id = 666
+
+        response = test_client.delete(
+            f"/cuboids/{unexciting_cuboid_id}",
+            content_type="application/json",
+        )
         assert response.status_code == HTTPStatus.NOT_FOUND
